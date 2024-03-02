@@ -33,7 +33,12 @@ else:
 
 # Either way we can now query the index
 query_engine = index.as_query_engine()
-response = query_engine.query("What does a data scientist do?")
+response = query_engine.query(
+    "You are a brilliant career adviser. Answer a question of job seekers with given information.\n"
+    "Also you need to show the source nodes that you are using to answer the question at the end of your response.\n"
+    "If you are asked to return jobs that are suitable for the job seeker, return Job ID, Title and Link.\n"
+    "Question: I am a data scientist with 3 years of experience in the UK. Give me 3 jobs that are suitable for me"
+)
 print(response)
 
 index.storage_context.persist()
