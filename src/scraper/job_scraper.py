@@ -37,7 +37,7 @@ def on_data(data: EventData):
                          data.description, ])
 
     df = pd.DataFrame(job_postings, columns=['Job_ID', 'Location', 'Title', 'Company', 'Date', 'Link', 'Description'])
-    df.to_csv("src/data/jobs.csv")
+    df.to_csv("data/jobs.csv")
 
 
 # Fired once for each page (25 jobs)
