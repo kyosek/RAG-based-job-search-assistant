@@ -38,7 +38,6 @@ def user_query(pdf_path: str, query: str):
         CV: {input_cv[0]}\n
         Question: {query}"""
     )
-    # 'Job ID: 3833524246\nTitle: Data Scientist\nLink: https://www.linkedin.com/jobs/view/3833524246/\n\nSource nodes used: CV information, job descriptions from the provided context.'
     return response
     
 
@@ -53,7 +52,6 @@ def evaluate_response(agent, query: str, response: str):
     Here is the query: {query}.\n
     Here is the response: {response}.\n
     """
-    # Second, if the answer of the first step is "No", classify the reason why the response is not adequate. You can classify from []
     evaluation = agent.chat(prompt)
     return evaluation
 
