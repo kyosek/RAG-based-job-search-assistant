@@ -66,6 +66,7 @@ def main(pdf_path, query, agent):
             query = evaluation.response # Update query
             response = user_query(pdf_path, query)
             evaluation = evaluate_response(response.response)
+            i += 1
         return response.response
 
 
