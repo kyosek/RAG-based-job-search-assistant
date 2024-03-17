@@ -3,34 +3,74 @@ from llama_index.core import (
     load_index_from_storage,
 )
 from llama_parse import LlamaParse
+from llama_index.agent.openai import OpenAIAgent
+from llama_index.llms.openai import OpenAI
 
 PERSIST_DIR = "./storage"
 pdf_path = "input_cv/data-science-cv-example.pdf"
-question = "Retrieve 3 jobs that are suitable for me"
+query = "Is my experience good fit for the position Job ID: 3833524246?"
 
+MAX_ITER = 3
+i = 0
 parser = LlamaParse(
     result_type="markdown"
 )
 
+llm = OpenAI(model="gpt-3.5-turbo-0613")
+agent = OpenAIAgent.from_tools(
+    llm=llm,
+    verbose=True,
+)
 
-def user_query(pdf_path: str):
+def user_query(pdf_path: str, query: str):
     input_cv = parser.load_data(pdf_path)
 
     storage_context = StorageContext.from_defaults(persist_dir=PERSIST_DIR)
     index = load_index_from_storage(storage_context)
 
-    query_engine = index.as_query_engine()
-    response = query_engine.query(
-        "You are a brilliant career adviser. Answer a question of job seekers with given information.\n"
-        "If their CV information is given, use that information as well to answer the question.\n"
-        "If you are asked to return jobs that are suitable for the job seeker, return Job ID, Title and Link.\n"
-        "If you are not sure about the answer, return NA. \n"
-        "You need to show the source nodes that you are using to answer the question at the end of your response.\n"
-        f"CV: {input_cv[0]} \n"
-        f"Question: {question}"
+    query_engine = index.as_query_engine(similarity_top_k=10)
+    response = query_engine.query(f"""
+        You are a brilliant career adviser. Answer a question of job seekers with given information.\n
+        If their CV information is given, use that information as well to answer the question.\n
+        When you respond, please make sure to answer step by step and also show the reference information that you used to answer. \n
+        If you are not sure about the answer, return NA.\n
+        You need to show the source nodes that you are using to answer the question at the end of your response.\n
+        CV: {input_cv[0]}\n
+        Question: {query}"""
     )
-    print(response)
+    # 'Job ID: 3833524246\nTitle: Data Scientist\nLink: https://www.linkedin.com/jobs/view/3833524246/\n\nSource nodes used: CV information, job descriptions from the provided context.'
+    return response
+    
+
+def evaluate_response(agent, query: str, response: str):
+    prompt = f"""
+    You are an evaluator of AI generated answers. Your task is to investigate whether the given response is logical and helpful to answer the query.\n
+    Please juedge the response step by step.\n
+    First, given the query, context and response, give your binary jedgement [Yes or No] if the response has good logic to answer the query in the context of the context.\n
+    If the answer is 'Yes', return 'Yes' only.\n
+    Second, if the answer of the first step is "No", re-write the query in the way it helps to retrieve more revelent context.\n
+    In the case you are re-writing the query, return the re-written query only.\n
+    Here is the query: {query}.\n
+    Here is the response: {response}.\n
+    """
+    # Second, if the answer of the first step is "No", classify the reason why the response is not adequate. You can classify from []
+    evaluation = agent.chat(prompt)
+    return evaluation
+
+
+def main(pdf_path, query, agent):
+    response = user_query(pdf_path, query)
+    evaluation = evaluate_response(agent, query, response.response)
+    if "Yes" in evaluation.response:
+        return response.response
+    else:
+        while (i < MAX_ITER) & ("Yes" in evaluation):
+            query = evaluation.response # Update query
+            response = user_query(pdf_path, query)
+            evaluation = evaluate_response(response.response)
+        return response.response
+
 
 
 if __name__ == "__main__":
-    user_query(pdf_path)
+    response = main(pdf_path, query, agent)
