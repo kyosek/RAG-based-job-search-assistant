@@ -5,20 +5,23 @@ from llama_index.core import (
 from llama_parse import LlamaParse
 from llama_index.agent.openai import OpenAIAgent
 from llama_index.llms.openai import OpenAI
+from llama_index.core.evaluation import FaithfulnessEvaluator, RelevancyEvaluator
 
 PERSIST_DIR = "./storage"
+MAX_ITER = 3
+
 pdf_path = "input_cv/data-science-cv-example.pdf"
 query = "Is my experience good fit for the position Job ID: 3833524246?"
+# query = "Is my experience good fit for the position Job ID: 2222222?"
 
-MAX_ITER = 3
-i = 0
 parser = LlamaParse(result_type="markdown")
-
 llm = OpenAI(model="gpt-3.5-turbo-0613")
 agent = OpenAIAgent.from_tools(
     llm=llm,
     verbose=True,
 )
+faithfulness_evaluator = FaithfulnessEvaluator(llm=llm)
+relevancy_evaluator = RelevancyEvaluator(llm=llm)
 
 
 def user_query(pdf_path: str, query: str):
@@ -57,18 +60,30 @@ def evaluate_response(agent, query: str, response: str):
 
 
 def main(pdf_path, query, agent):
+    i = 0
+    
     response = user_query(pdf_path, query)
     evaluation = evaluate_response(agent, query, response.response)
-    if "Yes" in evaluation.response:
+    faithful_eval = faithfulness_evaluator.evaluate_response(response=response)
+    relevancy_eval = relevancy_evaluator.evaluate_response(query=query, response=response)
+    
+    if ("Yes" in evaluation.response) | (faithful_eval.score >= 0.8) & (relevancy_eval.score >= 0.8):
         return response.response
     else:
-        while (i < MAX_ITER) & ("Yes" in evaluation):
+        while (i < MAX_ITER) & (faithful_eval.score < 0.8) & (relevancy_eval.score < 0.8) | ("Yes" not in evaluation):
             query = evaluation.response  # Update query
             response = user_query(pdf_path, query)
             evaluation = evaluate_response(response.response)
+            faithful_eval = faithfulness_evaluator.evaluate_response(response=response)
             i += 1
+            if i == MAX_ITER:
+                final_response = f"""Maximum iteration reached.\n
+                Please be cautious with the generated response. It might not be helpful.\n
+                {response.response}"""
+                return final_response
         return response.response
 
 
 if __name__ == "__main__":
     response = main(pdf_path, query, agent)
+    print(response)
