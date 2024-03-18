@@ -44,10 +44,10 @@ def user_query(pdf_path: str, query: str):
 def evaluate_response(agent, query: str, response: str):
     prompt = f"""
     You are an evaluator of AI generated answers. Your task is to investigate whether the given response is logical and helpful to answer the query.\n
-    Please juedge the response step by step.\n
-    First, given the query, context and response, give your binary jedgement [Yes or No] if the response has good logic to answer the query in the context of the context.\n
+    Please judge the response step by step.\n
+    First, given the query, context and response, give your binary judgement [Yes or No] if the response has good logic to answer the query in the context of the context.\n
     If the answer is 'Yes', return 'Yes' only.\n
-    Second, if the answer of the first step is "No", re-write the query in the way it helps to retrieve more revelent context.\n
+    Second, if the answer of the first step is "No", re-write the query in the way it helps to retrieve more reverent context.\n
     In the case you are re-writing the query, return the re-written query only.\n
     Here is the query: {query}.\n
     Here is the response: {response}.\n

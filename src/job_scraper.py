@@ -9,8 +9,6 @@ from linkedin_jobs_scraper.filters import (
     RelevanceFilters,
     TimeFilters,
     TypeFilters,
-    # ExperienceLevelFilters,
-    # OnSiteOrRemoteFilters,
 )
 
 logging.basicConfig(level=logging.INFO)
@@ -107,4 +105,3 @@ def scrape_jobs(job_title: str, locations: list):
 
 if __name__ == "__main__":
     scraper = scrape_jobs(JOB_TITLE, LOCATION)
-    # save_jobs(scraper)
