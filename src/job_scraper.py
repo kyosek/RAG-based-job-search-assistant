@@ -31,10 +31,30 @@ def on_data(data: EventData):
         data.insights,
         len(data.description),
     )
-    job_postings.append([data.job_id, data.location, data.title, data.company, data.date, data.link,
-                         data.description, ])
+    job_postings.append(
+        [
+            data.job_id,
+            data.location,
+            data.title,
+            data.company,
+            data.date,
+            data.link,
+            data.description,
+        ]
+    )
 
-    df = pd.DataFrame(job_postings, columns=['Job_ID', 'Location', 'Title', 'Company', 'Date', 'Link', 'Description'])
+    df = pd.DataFrame(
+        job_postings,
+        columns=[
+            "Job_ID",
+            "Location",
+            "Title",
+            "Company",
+            "Date",
+            "Link",
+            "Description",
+        ],
+    )
     df.to_csv("data/jobs.csv")
 
 
@@ -66,7 +86,7 @@ def initialise_scraper():
     scraper.on(Events.DATA, on_data)
     scraper.on(Events.ERROR, on_error)
     scraper.on(Events.END, on_end)
-    
+
     return scraper
 
 

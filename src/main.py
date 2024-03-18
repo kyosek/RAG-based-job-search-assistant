@@ -12,15 +12,14 @@ query = "Is my experience good fit for the position Job ID: 3833524246?"
 
 MAX_ITER = 3
 i = 0
-parser = LlamaParse(
-    result_type="markdown"
-)
+parser = LlamaParse(result_type="markdown")
 
 llm = OpenAI(model="gpt-3.5-turbo-0613")
 agent = OpenAIAgent.from_tools(
     llm=llm,
     verbose=True,
 )
+
 
 def user_query(pdf_path: str, query: str):
     input_cv = parser.load_data(pdf_path)
@@ -29,7 +28,8 @@ def user_query(pdf_path: str, query: str):
     index = load_index_from_storage(storage_context)
 
     query_engine = index.as_query_engine(similarity_top_k=10)
-    response = query_engine.query(f"""
+    response = query_engine.query(
+        f"""
         You are a brilliant career adviser. Answer a question of job seekers with given information.\n
         If their CV information is given, use that information as well to answer the question.\n
         When you respond, please make sure to answer step by step and also show the reference information that you used to answer. \n
@@ -39,7 +39,7 @@ def user_query(pdf_path: str, query: str):
         Question: {query}"""
     )
     return response
-    
+
 
 def evaluate_response(agent, query: str, response: str):
     prompt = f"""
@@ -63,12 +63,11 @@ def main(pdf_path, query, agent):
         return response.response
     else:
         while (i < MAX_ITER) & ("Yes" in evaluation):
-            query = evaluation.response # Update query
+            query = evaluation.response  # Update query
             response = user_query(pdf_path, query)
             evaluation = evaluate_response(response.response)
             i += 1
         return response.response
-
 
 
 if __name__ == "__main__":

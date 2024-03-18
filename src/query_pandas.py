@@ -62,9 +62,7 @@ qp.add_chain(["input", "pandas_prompt", "llm1", "pandas_output_parser"])
 qp.add_links(
     [
         Link("input", "response_synthesis_prompt", dest_key="query_str"),
-        Link(
-            "llm1", "response_synthesis_prompt", dest_key="pandas_instructions"
-        ),
+        Link("llm1", "response_synthesis_prompt", dest_key="pandas_instructions"),
         Link(
             "pandas_output_parser",
             "response_synthesis_prompt",
