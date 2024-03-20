@@ -6,13 +6,16 @@ from llama_parse import LlamaParse
 from llama_index.agent.openai import OpenAIAgent
 from llama_index.llms.openai import OpenAI
 from llama_index.core.evaluation import FaithfulnessEvaluator, RelevancyEvaluator
+from llama_index.core.retrievers import VectorIndexAutoRetriever
+from llama_index.core.vector_stores.types import MetadataInfo, VectorStoreInfo
 
 PERSIST_DIR = "./storage"
 MAX_ITER = 3
 
 pdf_path = "input_cv/data-science-cv-example.pdf"
-query = "Is my experience good fit for the position Job ID: 3833524246?"
+# query = "Is my experience good fit for the position Job ID: 3833524246?"
 # query = "Is my experience good fit for the position Job ID: 2222222?"
+query = "Can you generate a perfect job posting for me?"
 
 parser = LlamaParse(result_type="markdown")
 llm = OpenAI(model="gpt-3.5-turbo-0613")
@@ -29,6 +32,30 @@ def user_query(pdf_path: str, query: str):
 
     storage_context = StorageContext.from_defaults(persist_dir=PERSIST_DIR)
     index = load_index_from_storage(storage_context)
+    
+    # vector_store_info = VectorStoreInfo(
+    #     content_info="Job descriptions",
+    #     metadata_info=[]
+    # )
+    # retriever = VectorIndexAutoRetriever(
+    #     index,
+    #     vector_store_info,
+    #     llm=llm,
+    #     similarity_top_k=10,
+    #     vector_store_query_mode="hybrid",
+    #     alpha=0.5,
+    # )
+    
+    # query_temp = f"""
+    #     You are a brilliant career adviser. Answer a question of job seekers with given information.\n
+    #     If their CV information is given, use that information as well to answer the question.\n
+    #     When you respond, please make sure to answer step by step and also show the reference information that you used to answer. \n
+    #     If you are not sure about the answer, return NA.\n
+    #     You need to show the source nodes that you are using to answer the question at the end of your response.\n
+    #     CV: {input_cv[0]}\n
+    #     Question: {query}"""
+    
+    # response = retriever.retrieve(query_temp)
 
     query_engine = index.as_query_engine(similarity_top_k=10)
     response = query_engine.query(
