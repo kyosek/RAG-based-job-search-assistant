@@ -6,11 +6,38 @@ Have you done a job search and ended up with too many jobs look like a good next
 
 ## Use case examples
 
-Here are a few use case ideas how you can leverage this job search assistant but not limited to... Use your creativity to take advantage of this assistant.
+Here are a few use case ideas how you can leverage this job search assistant but not limited to. Use your creativity to take advantage of this assistant.
 
 - Pick up $n$ jobs that are most relevant to you
 - Tailor your CV to the job you want to apply
 - Help you to write a statement of purpose
+- Once you found a job that you are interested in, you can see which required skills are matched to the job (see the example output below.)
+
+>Query:
+>
+>"Can you itemise both the requirements of Job ID: 3833524246 and skill sets of my CV and tell me which requirements and my skill sets matched and missing."
+>
+>Response:
+>
+>"Your CV indicates that you are a Google and IBM certified Data Scientist with 8+ years of experience in driving quantifiable business growth and revenue in the retail and e-commerce sectors. It also mentions proficiency in Python, Java, and analytical skills. However, your CV does not explicitly mention experience with frameworks like Spark, DASK, Tensorflow, or PyTorch, which are required for the job.
+
+Matched requirements:
+1. 8+ years of experience as a data scientist
+2. Fluent in Python
+3. Excellent analytical skills
+4. Superior communication and presentation skills
+5. Used to start-up environments
+6. Social competence and a team player
+7. High energy and ambitious
+
+Missing requirements:
+1. Experience with Java and bashing scripts
+2. Mastery in at least one framework for BigData and one framework for Deep Learning
+3. Agile mindset
+
+Source nodes used:
+- Job ID: 3833524246
+- CV: Doc ID: 5ebaa1a2-7d1d-49e7-87b4-939d35664b5e"
 
 ## Architecture Overview
 
@@ -22,15 +49,15 @@ You will need to build a vector store with job posts and then you upload your CV
 
 There are 3 components in this project so far - It will source the job post data, build a vector storage and start querying questions regarding your job search. The usage of each components can be found below:
 
-### Scrape the job posts
+### 1. Scrape the job posts
 
 This can be done by running `src/job_scraper.py`. This script will use `linkedin_jobs_scraper` package to scrape the job posts in LinkedIn. You can configure the scraper to suit your job title, location, full/part time, etc in the file. The example is using job title: Data scientist and location: United Kingdom.
 
-### Build a vector storage
+### 2. Build a vector storage
 
 This can be done by running `src/store_data.py`. This process takes the csv file that contains job posts and create a vector store in `storage` directory.
 
-### Start querying
+### 3. Start querying
 
 This can be done by running `src/main.py`. You can upload your CV in `input_cv` directory and can be consumed in RAG.
 

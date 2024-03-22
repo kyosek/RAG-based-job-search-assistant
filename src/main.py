@@ -11,7 +11,8 @@ PERSIST_DIR = "./storage"
 MAX_ITER = 3
 
 pdf_path = "input_cv/data-science-cv-example.pdf"
-query = "Is my experience good fit for the position Job ID: 3833524246?"
+query = "Can you itemise both the requirements of Job ID: 3833524246 and skill sets of my CV and tell me which requirements and my skill sets matched and missing."
+# query = "Is my experience good fit for the position Job ID: 3833524246?"
 # query = "Is my experience good fit for the position Job ID: 2222222?"
 
 parser = LlamaParse(result_type="markdown")
