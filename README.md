@@ -20,24 +20,24 @@ Here are a few use case ideas how you can leverage this job search assistant but
 >Response:
 >
 >"Your CV indicates that you are a Google and IBM certified Data Scientist with 8+ years of experience in driving quantifiable business growth and revenue in the retail and e-commerce sectors. It also mentions proficiency in Python, Java, and analytical skills. However, your CV does not explicitly mention experience with frameworks like Spark, DASK, Tensorflow, or PyTorch, which are required for the job.
-
-Matched requirements:
-1. 8+ years of experience as a data scientist
-2. Fluent in Python
-3. Excellent analytical skills
-4. Superior communication and presentation skills
-5. Used to start-up environments
-6. Social competence and a team player
-7. High energy and ambitious
-
-Missing requirements:
-1. Experience with Java and bashing scripts
-2. Mastery in at least one framework for BigData and one framework for Deep Learning
-3. Agile mindset
-
-Source nodes used:
-- Job ID: 3833524246
-- CV: Doc ID: 5ebaa1a2-7d1d-49e7-87b4-939d35664b5e"
+>
+>Matched requirements:
+>1. 8+ years of experience as a data scientist
+>2. Fluent in Python
+>3. Excellent analytical skills
+>4. Superior communication and presentation skills
+>5. Used to start-up environments
+>6. Social competence and a team player
+>7. High energy and ambitious
+>
+>Missing requirements:
+>1. Experience with Java and bashing scripts
+>2. Mastery in at least one framework for BigData and one framework for Deep Learning
+>3. Agile mindset
+>
+>Source nodes used:
+>- Job ID: 3833524246
+>- CV: Doc ID: 5ebaa1a2-7d1d-49e7-87b4-939d35664b5e"
 
 ## Architecture Overview
 
