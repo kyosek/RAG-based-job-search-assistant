@@ -11,9 +11,9 @@ PERSIST_DIR = "./storage"
 MAX_ITER = 3
 
 pdf_path = "input_cv/data-science-cv-example.pdf"
-query = "Can you itemise both the requirements of Job ID: 3833524246 and skill sets of my CV and tell me which requirements and my skill sets matched and missing."
+query = "Can you itemise both the requirements of Job ID: 3831448644 and the skill sets of my CV and tell me which requirements and my skill sets are matched and missing?"
 # query = "Is my experience good fit for the position Job ID: 3833524246?"
-# query = "Is my experience good fit for the position Job ID: 2222222?"
+# query = "Retrieve 2 jobs that are suitable for me"
 
 parser = LlamaParse(result_type="markdown")
 llm = OpenAI(model="gpt-3.5-turbo-0613")
@@ -62,16 +62,22 @@ def evaluate_response(agent, query: str, response: str):
 
 def main(pdf_path, query, agent):
     i = 0
-    
+
     response = user_query(pdf_path, query)
     evaluation = evaluate_response(agent, query, response.response)
     faithful_eval = faithfulness_evaluator.evaluate_response(response=response)
-    relevancy_eval = relevancy_evaluator.evaluate_response(query=query, response=response)
-    
-    if ("Yes" in evaluation.response) | (faithful_eval.score >= 0.8) & (relevancy_eval.score >= 0.8):
+    relevancy_eval = relevancy_evaluator.evaluate_response(
+        query=query, response=response
+    )
+
+    if ("Yes" in evaluation.response) | (faithful_eval.score >= 0.8) & (
+        relevancy_eval.score >= 0.8
+    ):
         return response.response
     else:
-        while (i < MAX_ITER) & (faithful_eval.score < 0.8) & (relevancy_eval.score < 0.8) | ("Yes" not in evaluation):
+        while (i < MAX_ITER) & (faithful_eval.score < 0.8) & (
+            relevancy_eval.score < 0.8
+        ) | ("Yes" not in evaluation):
             query = evaluation.response  # Update query
             response = user_query(pdf_path, query)
             evaluation = evaluate_response(response.response)
