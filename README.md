@@ -4,6 +4,9 @@ This project aims to help your job search with GenAI!
 
 Have you done a job search and ended up with too many jobs look like a good next step and didn't know where to start? This project seeks to assist and be an AI guidance for your job search.
 
+## Demo
+![Gradio demo](doc/gradio_demo.mp4)
+
 ## Architecture Overview
 
 Here is the most simplistic RAG-based Job Search Assistant architecture overview.

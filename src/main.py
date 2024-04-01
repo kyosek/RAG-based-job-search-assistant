@@ -13,7 +13,7 @@ MAX_ITER = 3
 pdf_path = "input_cv/data-science-cv-example.pdf"
 query = "Can you itemise both the requirements of Job ID: 3831448644 and the skill sets of my CV and tell me which requirements and my skill sets are matched and missing?"
 # query = "Is my experience good fit for the position Job ID: 3833524246?"
-# query = "Retrieve 2 jobs that are suitable for me"
+# query = "Retrieve the most suitable job for me"
 
 parser = LlamaParse(result_type="markdown")
 llm = OpenAI(model="gpt-3.5-turbo-0613")
