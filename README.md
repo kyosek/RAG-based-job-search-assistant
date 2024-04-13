@@ -8,6 +8,12 @@ Have you done a job search and ended up with too many jobs look like a good next
 
 ![Gradio demo](doc/gradio_demo.gif)
 
+The Gradio demo can be run by
+
+```bash
+python src/gradio_demo.py
+```
+
 ## Architecture Overview
 
 Here is the most simplistic RAG-based Job Search Assistant architecture overview.
